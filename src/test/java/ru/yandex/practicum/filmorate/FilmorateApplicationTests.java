@@ -43,7 +43,6 @@ class FilmorateApplicationTests {
 
     private Film filmOne;
     private Film filmTwo;
-    private final static String URL = "http://localhost:8080";
 
     @Autowired
     private MockMvc mockMvc;
