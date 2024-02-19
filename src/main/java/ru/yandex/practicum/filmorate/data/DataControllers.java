@@ -22,4 +22,9 @@ public class DataControllers {
     public static Map<String, User> getUsers() {
         return users;
     }
+
+    public static void clearData() {
+        films.clear();
+        users.clear();
+    }
 }
