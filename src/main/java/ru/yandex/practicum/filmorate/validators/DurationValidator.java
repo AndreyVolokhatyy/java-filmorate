@@ -8,6 +8,6 @@ public class DurationValidator implements ConstraintValidator<MinDuration, Durat
 
     @Override
     public boolean isValid(Duration value, ConstraintValidatorContext context) {
-        return value != null && value.compareTo(Duration.ofMinutes(30)) > 0;
+        return value != null && value.compareTo(Duration.ofSeconds(30)) > 0;
     }
 }
