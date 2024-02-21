@@ -24,7 +24,8 @@ public class UserController {
         return new ArrayList<>(users.values());
     }
 
-    @PutMapping("/users")
+    @RequestMapping(value = "/users",
+            method = { RequestMethod.PUT, RequestMethod.POST })
     public User addUser(@RequestBody @Valid User user) {
         if (!users.containsKey(user.getLogin())) {
             User updateUser = fillEmptyName(user);
@@ -38,21 +39,11 @@ public class UserController {
             users.put(updateUser.getLogin(), updateUser);
             return updateUser;
         } else {
-            return null;
-        }
-    }
-
-    @PostMapping("/users")
-    public User updateUser(@RequestBody User user) {
-        String login = user.getLogin();
-        if (users.containsKey(login)) {
+            String login = user.getLogin();
             User updateUser = fillEmptyName(user);
             updateUser.setId(users.get(login).getId());
             users.put(updateUser.getLogin(), updateUser);
             return updateUser;
-        } else {
-            log.info("User not found");
-            return null;
         }
     }
 

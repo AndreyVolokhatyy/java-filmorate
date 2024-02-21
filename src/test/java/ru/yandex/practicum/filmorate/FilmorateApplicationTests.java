@@ -187,7 +187,7 @@ class FilmorateApplicationTests {
 
     @Test
     void shouldReturnObjectFilm() throws Exception {
-        filmOne = new Film("name", "description", LocalDate.of(2000, 10, 10), Duration.ofMinutes(40));
+        filmOne = new Film("name", "description", LocalDate.of(2000, 10, 10), 40);
 
         MvcResult mvcResult = this.mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -204,8 +204,8 @@ class FilmorateApplicationTests {
 
     @Test
     void shouldReturnObjectsFilm() throws Exception {
-        filmOne = new Film("name", "description", LocalDate.of(2000, 10, 10), Duration.ofMinutes(40));
-        filmTwo = new Film("day", "description day", LocalDate.of(1900, 10, 10), Duration.ofMinutes(400));
+        filmOne = new Film("name", "description", LocalDate.of(2000, 10, 10), 40);
+        filmTwo = new Film("day", "description day", LocalDate.of(1900, 10, 10), 400);
 
         mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -232,7 +232,7 @@ class FilmorateApplicationTests {
 
     @Test
     void shouldReturnUpdateObjectFilm() throws Exception {
-        filmOne = new Film("name", "description", LocalDate.of(2000, 10, 10), Duration.ofMinutes(40));
+        filmOne = new Film("name", "description", LocalDate.of(2000, 10, 10), 40);
 
         mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -257,7 +257,7 @@ class FilmorateApplicationTests {
 
     @Test
     void shouldReturnErrorName() throws Exception {
-        filmOne = new Film("", "description", LocalDate.of(2000, 10, 10), Duration.ofMinutes(40));
+        filmOne = new Film("", "description", LocalDate.of(2000, 10, 10), 40);
 
         mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -271,7 +271,7 @@ class FilmorateApplicationTests {
         filmOne = new Film("xxx", "The implementation of the method body creates and returns a " +
                 "new Greeting object with id and content attributes based on the next value from " +
                 "the counter and formats the given name by using the greeting",
-                LocalDate.of(2000, 10, 10), Duration.ofMinutes(40));
+                LocalDate.of(2000, 10, 10), 40);
 
         MvcResult mvcResult = this.mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -291,7 +291,7 @@ class FilmorateApplicationTests {
         filmOne = new Film("xxx", "The implementation of the method body creates and returns a " +
                 "new Greeting object with id and content attributes based on the next value from " +
                 "the counter and formats the given name by using the greetin",
-                LocalDate.of(2000, 10, 10), Duration.ofMinutes(40));
+                LocalDate.of(2000, 10, 10), 40);
 
         MvcResult mvcResult = this.mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -311,7 +311,7 @@ class FilmorateApplicationTests {
         filmOne = new Film("xxx", "The implementation of the method body creates and returns a " +
                 "new Greeting object with id and content attributes based on the next value from " +
                 "the counter and formats the given name by using the greeting ",
-                LocalDate.of(2000, 10, 10), Duration.ofMinutes(40));
+                LocalDate.of(2000, 10, 10), 40);
 
         mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -322,7 +322,7 @@ class FilmorateApplicationTests {
 
     @Test
     void shouldReturnErrorDateFilm() throws Exception {
-        filmOne = new Film("", "description", LocalDate.of(1985, 12, 27), Duration.ofMinutes(40));
+        filmOne = new Film("", "description", LocalDate.of(1985, 12, 27), 40);
 
         mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -333,7 +333,7 @@ class FilmorateApplicationTests {
 
     @Test
     void shouldReturnCreateDateFilm() throws Exception {
-        filmOne = new Film("", "description", LocalDate.of(1985, 12, 28), Duration.ofMinutes(40));
+        filmOne = new Film("", "description", LocalDate.of(1985, 12, 28), 40);
 
         mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -344,7 +344,7 @@ class FilmorateApplicationTests {
 
     @Test
     void shouldReturnErrorDuration() throws Exception {
-        filmOne = new Film("", "description", LocalDate.of(1985, 12, 28), Duration.ofMinutes(10));
+        filmOne = new Film("", "description", LocalDate.of(1985, 12, 28), 9);
 
         mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)

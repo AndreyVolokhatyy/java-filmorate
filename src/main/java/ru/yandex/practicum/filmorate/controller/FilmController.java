@@ -25,7 +25,8 @@ public class FilmController {
         return new ArrayList<>(films.values());
     }
 
-    @PutMapping("/films")
+    @RequestMapping(value = "/films",
+            method = { RequestMethod.PUT, RequestMethod.POST })
     public Film addFilm(@RequestBody @Valid Film film) {
         if (!films.containsKey(film.getName())) {
             if (maxId == 0) {
@@ -38,20 +39,10 @@ public class FilmController {
             films.put(film.getName(), film);
             return film;
         } else {
-            return null;
-        }
-    }
-
-    @PostMapping("/films")
-    public Film updateFilm(@RequestBody Film film) {
-        String name = film.getName();
-        if (films.containsKey(name)) {
+            String name = film.getName();
             film.setId(films.get(name).getId());
             films.put(film.getName(), film);
             return film;
-        } else {
-            log.info("Film not found");
-            return null;
         }
     }
 }
