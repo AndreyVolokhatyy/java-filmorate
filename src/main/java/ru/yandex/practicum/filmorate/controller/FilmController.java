@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.data.DataControllers;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -28,7 +30,8 @@ public class FilmController {
     @RequestMapping(value = "/films",
             method = { RequestMethod.PUT, RequestMethod.POST })
     public Film addFilm(@RequestBody @Valid Film film) {
-        if (!films.containsKey(film.getId())) {
+        boolean skip = checkName(film.getName());
+        if (!films.containsKey(film.getId()) && !skip) {
             if (maxId == 0) {
                 maxId = 1;
                 film.setId(1);
@@ -38,10 +41,22 @@ public class FilmController {
             }
             films.put(film.getId(), film);
             return film;
-        } else {
+        } else if (films.containsKey(film.getId())) {
             film.setId(film.getId());
             films.put(film.getId(), film);
             return film;
+        } else {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private boolean checkName(String str) {
+        boolean skip = false;
+        for (Film f : films.values()) {
+            if (f.getName().equals(str)) {
+                skip = true;
+            }
+        }
+        return skip;
     }
 }
