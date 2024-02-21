@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.validators.MinDuration;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.Duration;
 import java.time.LocalDate;
 
 /**
