@@ -11,7 +11,7 @@ import ru.yandex.practicum.filmorate.validators.MinDuration;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * Film.
@@ -31,9 +31,9 @@ public class Film {
     @Length(max = 200, message = "Too long description. Max 200 chars")
     private String description;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @MinDate
-    private LocalDateTime releaseDate;
+    private LocalDate releaseDate;
 
     @MinDuration
     private Duration duration;
@@ -41,7 +41,7 @@ public class Film {
     public Film() {
     }
 
-    public Film(String name, String description, LocalDateTime releaseDate, Duration duration) {
+    public Film(String name, String description, LocalDate releaseDate, Duration duration) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
