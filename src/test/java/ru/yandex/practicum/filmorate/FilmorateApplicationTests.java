@@ -118,6 +118,8 @@ class FilmorateApplicationTests {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
 
+
+        userOne.setId(1);
         userOne.setEmail("new@new.ru");
 
         MvcResult mvcResult = this.mockMvc.perform(post("/users")
@@ -128,7 +130,6 @@ class FilmorateApplicationTests {
                 .andReturn();
 
         String response = mvcResult.getResponse().getContentAsString();
-        userOne.setId(1);
         User userTest = getObjectFromJson(response, User.class);
         Assertions.assertTrue(userOne.equals(userTest));
     }
@@ -239,6 +240,7 @@ class FilmorateApplicationTests {
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
 
+        filmOne.setId(1);
         filmOne.setDescription("new@new.ru");
 
         MvcResult mvcResult = this.mockMvc.perform(post("/films")
@@ -249,7 +251,6 @@ class FilmorateApplicationTests {
                 .andReturn();
 
         String response = mvcResult.getResponse().getContentAsString();
-        filmOne.setId(1);
         Film filmTest = getObjectFromJson(response, Film.class);
         Assertions.assertTrue(filmOne.equals(filmTest));
     }

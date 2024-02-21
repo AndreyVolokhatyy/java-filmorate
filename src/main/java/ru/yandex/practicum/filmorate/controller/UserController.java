@@ -16,7 +16,7 @@ import java.util.Map;
 @Slf4j
 public class UserController {
 
-    private Map<String, User> users = DataControllers.getUsers();
+    private Map<Integer, User> users = DataControllers.getUsers();
     private int maxId;
 
     @GetMapping("/users")
@@ -27,7 +27,8 @@ public class UserController {
     @RequestMapping(value = "/users",
             method = { RequestMethod.PUT, RequestMethod.POST })
     public User addUser(@RequestBody @Valid User user) {
-        if (!users.containsKey(user.getLogin())) {
+        boolean skip = checkLogin(user.getLogin());
+        if (!users.containsKey(user.getId()) && !skip) {
             User updateUser = fillEmptyName(user);
             if (maxId == 0) {
                 maxId = 1;
@@ -36,14 +37,15 @@ public class UserController {
                 maxId++;
                 updateUser.setId(maxId);
             }
-            users.put(updateUser.getLogin(), updateUser);
+            users.put(updateUser.getId(), updateUser);
+            return updateUser;
+        } else if (users.containsKey(user.getId())) {
+            User updateUser = fillEmptyName(user);
+            updateUser.setId(user.getId());
+            users.put(updateUser.getId(), updateUser);
             return updateUser;
         } else {
-            String login = user.getLogin();
-            User updateUser = fillEmptyName(user);
-            updateUser.setId(users.get(login).getId());
-            users.put(updateUser.getLogin(), updateUser);
-            return updateUser;
+            return null;
         }
     }
 
@@ -52,5 +54,15 @@ public class UserController {
             user.setName(user.getLogin());
         }
         return user;
+    }
+
+    private boolean checkLogin(String str) {
+        boolean skip = false;
+        for (User u : users.values()) {
+            if (u.getLogin().equals(str)) {
+                skip = true;
+            }
+        }
+        return skip;
     }
 }

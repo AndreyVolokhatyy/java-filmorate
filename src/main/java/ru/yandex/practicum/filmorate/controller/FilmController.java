@@ -17,7 +17,7 @@ import java.util.Map;
 public class FilmController {
 
 
-    private Map<String, Film> films = DataControllers.getFilms();
+    private Map<Integer, Film> films = DataControllers.getFilms();
     private int maxId;
 
     @GetMapping("/films")
@@ -28,7 +28,7 @@ public class FilmController {
     @RequestMapping(value = "/films",
             method = { RequestMethod.PUT, RequestMethod.POST })
     public Film addFilm(@RequestBody @Valid Film film) {
-        if (!films.containsKey(film.getName())) {
+        if (!films.containsKey(film.getId())) {
             if (maxId == 0) {
                 maxId = 1;
                 film.setId(1);
@@ -36,12 +36,11 @@ public class FilmController {
                 maxId++;
                 film.setId(maxId);
             }
-            films.put(film.getName(), film);
+            films.put(film.getId(), film);
             return film;
         } else {
-            String name = film.getName();
-            film.setId(films.get(name).getId());
-            films.put(film.getName(), film);
+            film.setId(film.getId());
+            films.put(film.getId(), film);
             return film;
         }
     }

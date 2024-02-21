@@ -12,14 +12,14 @@ import java.util.Map;
 @Data
 public class DataControllers {
 
-    private static Map<String, Film> films = new HashMap<>();
-    private static Map<String, User> users = new HashMap<>();
+    private static Map<Integer, Film> films = new HashMap<>();
+    private static Map<Integer, User> users = new HashMap<>();
 
-    public static Map<String, Film> getFilms() {
+    public static Map<Integer, Film> getFilms() {
         return films;
     }
 
-    public static Map<String, User> getUsers() {
+    public static Map<Integer, User> getUsers() {
         return users;
     }
 
