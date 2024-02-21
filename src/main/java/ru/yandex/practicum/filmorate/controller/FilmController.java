@@ -2,10 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.data.DataControllers;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -28,7 +25,7 @@ public class FilmController {
         return new ArrayList<>(films.values());
     }
 
-    @PostMapping("/add/film")
+    @PutMapping("/films")
     public Film addFilm(@RequestBody @Valid Film film) {
         if (!films.containsKey(film.getName())) {
             if (maxId == 0) {
@@ -45,7 +42,7 @@ public class FilmController {
         }
     }
 
-    @PostMapping("/update/film")
+    @PostMapping("/films")
     public Film updateFilm(@RequestBody Film film) {
         String name = film.getName();
         if (films.containsKey(name)) {

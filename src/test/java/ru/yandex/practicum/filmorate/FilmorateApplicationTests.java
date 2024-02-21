@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -69,7 +68,7 @@ class FilmorateApplicationTests {
     void shouldReturnObjectUser() throws Exception {
         userOne = new User("aasd@asd.asd", "xxx", "mister", LocalDateTime.of(2000, 10, 10, 10, 10));
 
-        MvcResult mvcResult = this.mockMvc.perform(post("/add/user")
+        MvcResult mvcResult = this.mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(userOne)))
                 .andDo(print())
@@ -87,13 +86,13 @@ class FilmorateApplicationTests {
         userOne = new User("aasd@asd.asd", "xxx", "mister", LocalDateTime.of(2000, 10, 10, 10, 10));
         userTwo = new User("aa@as.as", "zzz", "mister", LocalDateTime.of(2001, 10, 10, 10, 10));
 
-        mockMvc.perform(post("/add/user")
+        mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(userOne)))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
 
-        mockMvc.perform(post("/add/user")
+        mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(userTwo)))
                 .andDo(print())
@@ -114,7 +113,7 @@ class FilmorateApplicationTests {
     void shouldReturnUpdateObjectUser() throws Exception {
         userOne = new User("aasd@asd.asd", "xxx", "mister", LocalDateTime.of(2000, 10, 10, 10, 10));
 
-        mockMvc.perform(post("/add/user")
+        mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(userOne)))
                 .andDo(print())
@@ -122,7 +121,7 @@ class FilmorateApplicationTests {
 
         userOne.setEmail("new@new.ru");
 
-        MvcResult mvcResult = this.mockMvc.perform(post("/update/user")
+        MvcResult mvcResult = this.mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(userOne)))
                 .andDo(print())
@@ -139,7 +138,7 @@ class FilmorateApplicationTests {
     void shouldReturnErrorEmail() throws Exception {
         userOne = new User("aasdasd.asd", "xxx", "mister", LocalDateTime.of(2000, 10, 10, 10, 10));
 
-        mockMvc.perform(post("/add/user")
+        mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(userOne)))
                 .andDo(print())
@@ -150,7 +149,7 @@ class FilmorateApplicationTests {
     void shouldReturnErrorLogin() throws Exception {
         userOne = new User("aasd@asd.asd", "xx x", "mister", LocalDateTime.of(2000, 10, 10, 10, 10));
 
-        mockMvc.perform(post("/add/user")
+        mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(userOne)))
                 .andDo(print())
@@ -161,7 +160,7 @@ class FilmorateApplicationTests {
     void shouldReturnErrorDate() throws Exception {
         userOne = new User("aasd@asd.asd", "xxx", "mister", LocalDateTime.of(2045, 10, 10, 10, 10));
 
-        mockMvc.perform(post("/add/user")
+        mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(userOne)))
                 .andDo(print())
@@ -172,7 +171,7 @@ class FilmorateApplicationTests {
     void shouldReturnFilledName() throws Exception {
         userOne = new User("aasd@asd.asd", "xxx", "", LocalDateTime.of(2000, 10, 10, 10, 10));
 
-        MvcResult mvcResult = mockMvc.perform(post("/add/user")
+        MvcResult mvcResult = mockMvc.perform(put("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(userOne)))
                 .andDo(print())
@@ -190,7 +189,7 @@ class FilmorateApplicationTests {
     void shouldReturnObjectFilm() throws Exception {
         filmOne = new Film("name", "description", LocalDateTime.of(2000, 10, 10, 10, 10), Duration.ofMinutes(40));
 
-        MvcResult mvcResult = this.mockMvc.perform(post("/add/film")
+        MvcResult mvcResult = this.mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
@@ -208,13 +207,13 @@ class FilmorateApplicationTests {
         filmOne = new Film("name", "description", LocalDateTime.of(2000, 10, 10, 10, 10), Duration.ofMinutes(40));
         filmTwo = new Film("day", "description day", LocalDateTime.of(1900, 10, 10, 10, 10), Duration.ofMinutes(400));
 
-        mockMvc.perform(post("/add/film")
+        mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
                 .andExpect(status().is2xxSuccessful());
 
-        mockMvc.perform(post("/add/film")
+        mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmTwo)))
                 .andDo(print())
@@ -235,7 +234,7 @@ class FilmorateApplicationTests {
     void shouldReturnUpdateObjectFilm() throws Exception {
         filmOne = new Film("name", "description", LocalDateTime.of(2000, 10, 10, 10, 10), Duration.ofMinutes(40));
 
-        mockMvc.perform(post("/add/film")
+        mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
@@ -243,7 +242,7 @@ class FilmorateApplicationTests {
 
         filmOne.setDescription("new@new.ru");
 
-        MvcResult mvcResult = this.mockMvc.perform(post("/update/film")
+        MvcResult mvcResult = this.mockMvc.perform(post("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
@@ -260,7 +259,7 @@ class FilmorateApplicationTests {
     void shouldReturnErrorName() throws Exception {
         filmOne = new Film("", "description", LocalDateTime.of(2000, 10, 10, 10, 10), Duration.ofMinutes(40));
 
-        mockMvc.perform(post("/add/film")
+        mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
@@ -274,7 +273,7 @@ class FilmorateApplicationTests {
                 "the counter and formats the given name by using the greeting",
                 LocalDateTime.of(2000, 10, 10, 10, 10), Duration.ofMinutes(40));
 
-        MvcResult mvcResult = this.mockMvc.perform(post("/add/film")
+        MvcResult mvcResult = this.mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
@@ -294,7 +293,7 @@ class FilmorateApplicationTests {
                 "the counter and formats the given name by using the greetin",
                 LocalDateTime.of(2000, 10, 10, 10, 10), Duration.ofMinutes(40));
 
-        MvcResult mvcResult = this.mockMvc.perform(post("/add/film")
+        MvcResult mvcResult = this.mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
@@ -314,7 +313,7 @@ class FilmorateApplicationTests {
                 "the counter and formats the given name by using the greeting ",
                 LocalDateTime.of(2000, 10, 10, 10, 10), Duration.ofMinutes(40));
 
-        mockMvc.perform(post("/add/film")
+        mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
@@ -325,7 +324,7 @@ class FilmorateApplicationTests {
     void shouldReturnErrorDateFilm() throws Exception {
         filmOne = new Film("", "description", LocalDateTime.of(1985, 12, 27, 23, 59), Duration.ofMinutes(40));
 
-        mockMvc.perform(post("/add/film")
+        mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
@@ -336,7 +335,7 @@ class FilmorateApplicationTests {
     void shouldReturnCreateDateFilm() throws Exception {
         filmOne = new Film("", "description", LocalDateTime.of(1985, 12, 28, 00, 00), Duration.ofMinutes(40));
 
-        mockMvc.perform(post("/add/film")
+        mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
@@ -347,7 +346,7 @@ class FilmorateApplicationTests {
     void shouldReturnErrorDuration() throws Exception {
         filmOne = new Film("", "description", LocalDateTime.of(1985, 12, 28, 00, 01), Duration.ofMinutes(10));
 
-        mockMvc.perform(post("/add/film")
+        mockMvc.perform(put("/films")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(setObjectToJson(filmOne)))
                 .andDo(print())
