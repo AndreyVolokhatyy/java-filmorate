@@ -1,62 +1,63 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import ru.yandex.practicum.filmorate.data.DataControllers;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Validated
 @RestController
 @Slf4j
 public class FilmController {
 
+    private FilmStorage filmStorage;
+    private FilmService filmService;
 
-    private Map<Integer, Film> films = DataControllers.getFilms();
-    private int maxId;
+    @Autowired
+    public FilmController(InMemoryFilmStorage inMemoryFilmStorage, FilmService filmService) {
+        filmStorage = inMemoryFilmStorage;
+        this.filmService = filmService;
+    }
 
     @GetMapping("/films")
     public List<Film> listFilms() {
-        return new ArrayList<>(films.values());
+        return filmStorage.getListFilms();
+    }
+
+    @GetMapping("/films/{id}")
+    public Film listFilms(@PathVariable int id) {
+        return filmStorage.getFilm(id);
     }
 
     @RequestMapping(value = "/films",
-            method = { RequestMethod.PUT, RequestMethod.POST })
+            method = {RequestMethod.PUT, RequestMethod.POST})
     public Film addFilm(@RequestBody @Valid Film film) {
-        boolean skip = checkName(film.getName());
-        if (!films.containsKey(film.getId()) && !skip) {
-            if (maxId == 0) {
-                maxId = 1;
-                film.setId(1);
-            } else {
-                maxId++;
-                film.setId(maxId);
-            }
-            films.put(film.getId(), film);
-            return film;
-        } else if (films.containsKey(film.getId())) {
-            film.setId(film.getId());
-            films.put(film.getId(), film);
-            return film;
-        } else {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return filmStorage.handlerFilms(film);
     }
 
-    private boolean checkName(String str) {
-        boolean skip = false;
-        for (Film f : films.values()) {
-            if (f.getName().equals(str)) {
-                skip = true;
-            }
+    @PutMapping("/films/{id}/like/{userId}")
+    public Film addLikeFilm(@PathVariable int id, @PathVariable int userId) {
+        return filmService.addLikes(id, userId);
+    }
+
+    @DeleteMapping("/films/{id}/like/{userId}")
+    public Film deleteLikeFilm(@PathVariable int id, @PathVariable int userId) {
+        return filmService.deleteLikes(id, userId);
+    }
+
+    @GetMapping("/films/popular")
+    public List<Film> addLikeFilm(@RequestParam(required = false) Integer count) {
+        if (count == null) {
+            count = 10;
         }
-        return skip;
+        return filmService.getPopular(count);
     }
 }
