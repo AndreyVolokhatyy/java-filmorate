@@ -6,8 +6,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -17,29 +15,29 @@ import java.util.List;
 @Slf4j
 public class FilmController {
 
-    private FilmStorage filmStorage;
+    private static final int DEFAULT_LIKE = 10;
+
     private FilmService filmService;
 
     @Autowired
-    public FilmController(InMemoryFilmStorage inMemoryFilmStorage, FilmService filmService) {
-        filmStorage = inMemoryFilmStorage;
+    public FilmController(FilmService filmService) {
         this.filmService = filmService;
     }
 
     @GetMapping("/films")
     public List<Film> listFilms() {
-        return filmStorage.getListFilms();
+        return filmService.getListFilms();
     }
 
     @GetMapping("/films/{id}")
-    public Film listFilms(@PathVariable int id) {
-        return filmStorage.getFilm(id);
+    public Film getFilms(@PathVariable int id) {
+        return filmService.getFilm(id);
     }
 
     @RequestMapping(value = "/films",
             method = {RequestMethod.PUT, RequestMethod.POST})
     public Film addFilm(@RequestBody @Valid Film film) {
-        return filmStorage.handlerFilms(film);
+        return filmService.handlerFilms(film);
     }
 
     @PutMapping("/films/{id}/like/{userId}")
@@ -55,7 +53,7 @@ public class FilmController {
     @GetMapping("/films/popular")
     public List<Film> addLikeFilm(@RequestParam(required = false) Integer count) {
         if (count == null) {
-            count = 10;
+            count = DEFAULT_LIKE;
         }
         return filmService.getPopular(count);
     }

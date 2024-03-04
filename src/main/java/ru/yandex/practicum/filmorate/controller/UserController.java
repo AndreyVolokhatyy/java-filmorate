@@ -6,8 +6,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -18,24 +16,22 @@ import java.util.Set;
 @Slf4j
 public class UserController {
 
-    private UserStorage userStorage;
     private UserService userService;
 
     @Autowired
-    public UserController(InMemoryUserStorage inMemoryUserStorage, UserService userService) {
-        this.userStorage = inMemoryUserStorage;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/users")
     public List<User> listUsers() {
-        return userStorage.getListUsers();
+        return userService.getListUsers();
     }
 
     @RequestMapping(value = "/users",
             method = {RequestMethod.PUT, RequestMethod.POST})
     public User addUser(@RequestBody @Valid User user) {
-        return userStorage.heandlerUser(user);
+        return userService.addUser(user);
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
@@ -60,6 +56,6 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public User getUser(@PathVariable int id) {
-        return userStorage.getUser(id);
+        return userService.getUser(id);
     }
 }
