@@ -9,6 +9,8 @@ import ru.yandex.practicum.filmorate.validators.NotIncludeSpace;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Slf4j
@@ -28,6 +30,8 @@ public class User {
 
     private String name;
 
+    private Set<Integer> friends;
+
     @Past
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -38,8 +42,10 @@ public class User {
         this.login = login;
         this.name = name;
         this.birthday = birthday;
+        friends = new HashSet<>();
     }
 
     public User() {
+        friends = new HashSet<>();
     }
 }

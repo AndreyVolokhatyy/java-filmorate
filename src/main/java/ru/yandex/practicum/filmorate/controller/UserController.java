@@ -1,70 +1,61 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import ru.yandex.practicum.filmorate.data.DataControllers;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 @Validated
 @RestController
 @Slf4j
 public class UserController {
 
-    private Map<Integer, User> users = DataControllers.getUsers();
-    private int maxId;
+    private UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/users")
     public List<User> listUsers() {
-        return new ArrayList<>(users.values());
+        return userService.getListUsers();
     }
 
     @RequestMapping(value = "/users",
-            method = { RequestMethod.PUT, RequestMethod.POST })
+            method = {RequestMethod.PUT, RequestMethod.POST})
     public User addUser(@RequestBody @Valid User user) {
-        boolean skip = checkLogin(user.getLogin());
-        if (!users.containsKey(user.getId()) && !skip) {
-            User updateUser = fillEmptyName(user);
-            if (maxId == 0) {
-                maxId = 1;
-                updateUser.setId(1);
-            } else {
-                maxId++;
-                updateUser.setId(maxId);
-            }
-            users.put(updateUser.getId(), updateUser);
-            return updateUser;
-        } else if (users.containsKey(user.getId())) {
-            User updateUser = fillEmptyName(user);
-            updateUser.setId(user.getId());
-            users.put(updateUser.getId(), updateUser);
-            return updateUser;
-        } else {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return userService.addUser(user);
     }
 
-    private User fillEmptyName(User user) {
-        if (user.getName() == null || user.getName().isEmpty()) {
-            user.setName(user.getLogin());
-        }
-        return user;
+    @PutMapping("/users/{id}/friends/{friendId}")
+    public User addFriends(@PathVariable int id, @PathVariable int friendId) {
+        return userService.addFriends(id, friendId);
     }
 
-    private boolean checkLogin(String str) {
-        boolean skip = false;
-        for (User u : users.values()) {
-            if (u.getLogin().equals(str)) {
-                skip = true;
-            }
-        }
-        return skip;
+    @DeleteMapping("/users/{id}/friends/{friendId}")
+    public User deleteFriends(@PathVariable int id, @PathVariable int friendId) {
+        return userService.deleteFriends(id, friendId);
+    }
+
+    @GetMapping("/users/{id}/friends")
+    public Set<User> listFriends(@PathVariable int id) {
+        return userService.getFriends(id);
+    }
+
+    @GetMapping("/users/{id}/friends/common/{otherId}")
+    public Set<User> listCommonFriends(@PathVariable int id, @PathVariable int otherId) {
+        return userService.getCommonFriends(id, otherId);
+    }
+
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable int id) {
+        return userService.getUser(id);
     }
 }

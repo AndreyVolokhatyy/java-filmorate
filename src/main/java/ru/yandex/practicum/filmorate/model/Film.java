@@ -11,6 +11,8 @@ import ru.yandex.practicum.filmorate.validators.MinDuration;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Film.
@@ -37,7 +39,12 @@ public class Film {
     @MinDuration
     private Integer duration;
 
+    private Set<Integer> likes;
+
+    private long rate;
+
     public Film() {
+        likes = new HashSet<>();
     }
 
     public Film(String name, String description, LocalDate releaseDate, Integer duration) {
@@ -45,5 +52,6 @@ public class Film {
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+        likes = new HashSet<>();
     }
 }
