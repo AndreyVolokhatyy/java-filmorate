@@ -3,7 +3,7 @@
 ### Schema Data Base for project.<br/>
 ![alt text](Schema.png)
 ### Description tables:
-#### users:
+#### user:
 Таблица пользователей.</br>
 id - Уникальный ключ для идентификации записи.</br>
 login - Логин пользователя.</br>
@@ -12,7 +12,7 @@ email - Имейл пользователя.</br>
 birthday - Дата рождения пользователя.</br>
 created_at - Время создания записи.</br>
 is_active - Признак активности записи (Если запись не активна, то значит удалена).</br>
-#### friends:
+#### friend:
 Таблица заявок на дружбу.</br>
 id - Уникальный ключ для идентификации записи.</br>
 following_user_id - Пользователь отправивший запрос дружбы.</br>
@@ -20,7 +20,7 @@ followed_user_id - Пользователь которому отправимл�
 is_accept - Признак подтвержденного запроса дружбы.</br>
 created_at - Время создания записи.</br>
 is_active - Признак активности записи (Если запись не активна, то значит удалена).</br>
-#### films:
+#### film:
 Таблица фильмов.</br>
 id - Уникальный ключ для идентификации записи.</br>
 name - Название фильма.</br>
@@ -30,7 +30,7 @@ duration - Продолжительность фильма.</br>
 rate_mpa_id - ИД рейтинга Motion Picture Association.</br>
 created_at - Время создания записи.</br>
 is_active - Признак активности записи (Если запись не активна, то значит удалена).</br>
-#### rate:
+#### like:
 Таблица лайков фильму.</br>
 id - Уникальный ключ для идентификации записи.</br>
 film_id - ИД фильма.</br>
@@ -43,7 +43,7 @@ id - Уникальный ключ для идентификации запис�
 name - Название жанра.</br>
 created_at - Время создания записи.</br>
 is_active - Признак активности записи (Если запись не активна, то значит удалена).</br>
-#### films_genre:
+#### film_genre:
 Таблица жанров фильмов.</br>
 id - Уникальный ключ для идентификации записи.</br>
 film_id - ИД фильма.</br>
@@ -60,30 +60,30 @@ is_active - Признак активности записи (Если запи�
 ##### get user:<br/>
 ```sql
     select *
-    from users
+    from user
     where id = ${id} and is_active
 ```
 ##### get all users:<br/>
 ```sql
     select *
-    from users
+    from user
     where is_active
 ```
 ##### get friends user:<br/>
 ```sql
     select u.*
-    from users u
-    left join friends f on f.followed_id = u.id and f.is_active
+    from user u
+    left join friend f on f.followed_id = u.id and f.is_active
     where u.is_active and f.following_id = ${id}
 ```
 ##### get film:<br/>
 ```sql
     select f.*, r.name, g.name
-    from films f
+    from film f
     left join rate_mpa r on r.id = f.rate_mpa_id and r.is_active
     left join (
         select fg.film_id, string_agg(g.name, ' ,') name
-        from films_genre fg 
+        from film_genre fg 
         join genre g on g.id = fg.genre_id and g.is_active
         where fg.is_active and fg.film_id = ${id}
         group by fg.film_id
@@ -93,11 +93,11 @@ is_active - Признак активности записи (Если запи�
 ##### get all films:<br/>
 ```sql
     select f.*, r.name, g.name
-    from films f
+    from film f
     left join rate_mpa r on r.id = f.rate_mpa_id and r.is_active
     left join (
         select fg.film_id, string_agg(g.name, ' ,') name
-        from films_genre fg 
+        from film_genre fg 
         join genre g on g.id = fg.genre_id and g.is_active
         where fg.is_active
         group by fg.film_id
@@ -106,22 +106,22 @@ is_active - Признак активности записи (Если запи�
 ```
 ##### get film sorted rate:<br/>
 ```sql
-    select f.*, r.name, g.name, rate.rate
-    from films f
+    select f.*, r.name, g.name, l.rate
+    from film f
     left join rate_mpa r on r.id = f.rate_mpa_id and r.is_active
     left join (
         select fg.film_id, string_agg(g.name, ' ,') name
-        from films_genre fg 
+        from film_genre fg 
         join genre g on g.id = fg.genre_id and g.is_active
         where fg.is_active
         group by fg.film_id
         ) g on g.film_id = f.id
     left join (
-        select count(distinct r.user_id) rate, r.film_id
-        from rate r        
-        where r.is_active
-        group by r.film_id
-        ) rate on rate.film_id = f.id
+        select count(distinct l.user_id) rate, l.film_id
+        from like l        
+        where l.is_active
+        group by l.film_id
+        ) l on l.film_id = f.id
     where f.is_active
-    order by rate.rate desc
+    order by l.rate desc
 ```
