@@ -16,9 +16,9 @@ public class Friend {
     @NotNull
     private int id;
     @NotNull
-    private int following_user_id;
+    private int followingUserId;
     @NotNull
-    private int followed_user_id;
+    private int followedUserId;
     @NotNull
     private boolean isAccept;
     @NotNull

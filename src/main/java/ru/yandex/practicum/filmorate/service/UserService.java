@@ -39,7 +39,7 @@ public class UserService {
     public Set<User> getFriends(int userId) {
         Set<User> users = new HashSet<>();
         userStorage.getUser(userId).getFriends()
-                .forEach(f -> users.add(userStorage.getUser(f.getFollowed_user_id())));
+                .forEach(f -> users.add(userStorage.getUser(f.getFollowedUserId())));
         return users;
     }
 
