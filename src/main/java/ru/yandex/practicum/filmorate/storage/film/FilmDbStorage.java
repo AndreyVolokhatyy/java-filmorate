@@ -143,7 +143,7 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     private Film getFilmFromName(String name) {
-        return jdbcTemplate.queryForObject("select * from \"film\" where \"name\" = ? and \"is_active\"",
+        return jdbcTemplate.queryForObject("select * from \"film\" where \"name\" = ? and \"is_active\" order by \"id\" desc limit 1",
                 (rs, rowNum) -> filmResponse(rs), name);
     }
 
