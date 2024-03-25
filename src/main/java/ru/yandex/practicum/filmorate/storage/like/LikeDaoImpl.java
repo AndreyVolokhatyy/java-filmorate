@@ -48,8 +48,8 @@ public class LikeDaoImpl implements LikeStorage {
     private Like makeLike(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         int filmId = rs.getInt("film_id");
-        int user_id = rs.getInt("user_id");
+        int userId = rs.getInt("user_id");
         boolean isActive = rs.getBoolean("is_active");
-        return new Like(id, filmId, user_id, isActive);
+        return new Like(id, filmId, userId, isActive);
     }
 }
