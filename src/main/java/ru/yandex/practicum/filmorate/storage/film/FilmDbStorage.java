@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.BadRequestException;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.genre.GenreDaoImpl;
 import ru.yandex.practicum.filmorate.storage.film.genre.FilmGenreDaoImpl;
@@ -136,6 +137,11 @@ public class FilmDbStorage implements FilmStorage {
         String sqlFilm = "INSERT INTO \"film\" " +
                 "(\"name\", \"description\", \"release_date\", \"duration\", \"rate_mpa_id\", \"is_active\")" +
                 "VALUES (?, ?, ?, ?, ?, true);";
+        try {
+            rateMPADao.findRateById(film.getMpa().getId());
+        } catch (Exception e) {
+            throw new BadRequestException(e);
+        }
         jdbcTemplate.update(sqlFilm,
                 film.getName(),
                 film.getDescription(),

@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.like;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.SQLRequestExceptions;
 import ru.yandex.practicum.filmorate.model.Like;
 
 import java.sql.ResultSet;
@@ -19,7 +20,11 @@ public class LikeDaoImpl implements LikeStorage {
     @Override
     public List<Like> findLikeByFilmId(int id) {
         String sql = "select * from \"like\" where \"film_id\"=? and \"is_active\"";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> makeLike(rs), id);
+        try {
+            return jdbcTemplate.query(sql, (rs, rowNum) -> makeLike(rs), id);
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
     }
 
     public void delete(Integer filmId, Integer userId) {
@@ -27,22 +32,30 @@ public class LikeDaoImpl implements LikeStorage {
                 "set \"is_active\" = false " +
                 "where \"film_id\" = ? " +
                 "and \"user_id\" = ?";
-        jdbcTemplate.update(
-                sqlGenre,
-                filmId,
-                userId
-        );
+        try {
+            jdbcTemplate.update(
+                    sqlGenre,
+                    filmId,
+                    userId
+            );
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
     }
 
     public void insert(Integer filmId, Integer userId) {
         String sql = "INSERT INTO \"like\" " +
                 "(\"film_id\", \"user_id\", \"is_active\")" +
                 "VALUES (?, ?, true);";
-        jdbcTemplate.update(
-                sql,
-                filmId,
-                userId
-        );
+        try {
+            jdbcTemplate.update(
+                    sql,
+                    filmId,
+                    userId
+            );
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
     }
 
     private Like makeLike(ResultSet rs) throws SQLException {

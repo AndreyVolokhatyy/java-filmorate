@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.SQLRequestExceptions;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.friend.FriendDaoImpl;
 
@@ -53,7 +54,6 @@ public class UserDbStorage implements UserStorage {
         } else {
             createNewUser(user);
         }
-        System.out.println(getUserFromLogin(user.getLogin()));
         return getUserFromLogin(user.getLogin());
     }
 
@@ -83,13 +83,20 @@ public class UserDbStorage implements UserStorage {
         String sqlUser = "INSERT INTO \"user\" " +
                 "(\"login\", \"name\", \"email\", \"birthday\", \"is_active\")" +
                 "VALUES (?, ?, ?, ?, true);";
-        jdbcTemplate.update(sqlUser,
-                user.getLogin(),
-                user.getName(),
-                user.getEmail(),
-                user.getBirthday()
-        );
-        return getUserFromLogin(user.getLogin());
+        try {
+            jdbcTemplate.update(sqlUser,
+                    user.getLogin(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getBirthday()
+            );
+        } catch (
+                Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
+        return
+
+                getUserFromLogin(user.getLogin());
     }
 
     @Override
@@ -100,20 +107,28 @@ public class UserDbStorage implements UserStorage {
                 "\"email\" = ?, " +
                 "\"birthday\" = ? " +
                 " where \"id\" = ?;";
-        jdbcTemplate.update(
-                sqlFilm,
-                user.getLogin(),
-                user.getName(),
-                user.getEmail(),
-                user.getBirthday(),
-                user.getId()
-        );
+        try {
+            jdbcTemplate.update(
+                    sqlFilm,
+                    user.getLogin(),
+                    user.getName(),
+                    user.getEmail(),
+                    user.getBirthday(),
+                    user.getId()
+            );
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
         return user;
     }
 
     private User getUserFromLogin(String login) {
-        return jdbcTemplate.queryForObject("select * from \"user\" where \"login\" = ? and \"is_active\"",
-                (rs, rowNum) -> userResponse(rs), login);
+        try {
+            return jdbcTemplate.queryForObject("select * from \"user\" where \"login\" = ? and \"is_active\"",
+                    (rs, rowNum) -> userResponse(rs), login);
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
     }
 
 }

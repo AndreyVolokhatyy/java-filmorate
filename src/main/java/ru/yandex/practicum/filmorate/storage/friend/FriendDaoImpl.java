@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.friend;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.SQLRequestExceptions;
 import ru.yandex.practicum.filmorate.model.Friend;
 
 import java.sql.ResultSet;
@@ -19,7 +20,11 @@ public class FriendDaoImpl implements FriendStorage {
     @Override
     public List<Friend> findAllFriends(Integer id) {
         String sql = "select * from \"friend\" where \"following_user_id\" = ? and \"is_active\" order by \"id\"";
+        try {
             return jdbcTemplate.query(sql, (rs, rowNum) -> makeGenre(rs), id);
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
     }
 
     @Override
@@ -27,7 +32,11 @@ public class FriendDaoImpl implements FriendStorage {
         String sql = "update \"friend\" " +
                 "set \"is_active\" = false " +
                 "where \"following_user_id\" = ? and \"followed_user_id\" = ?";
-        jdbcTemplate.update(sql, followingId, followedId);
+        try {
+            jdbcTemplate.update(sql, followingId, followedId);
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
     }
 
     @Override
@@ -35,7 +44,11 @@ public class FriendDaoImpl implements FriendStorage {
         String sql = "INSERT INTO \"friend\" " +
                 "(\"following_user_id\", \"followed_user_id\", \"is_accept\", \"is_active\")" +
                 "VALUES (?, ?, false, true);";
-        jdbcTemplate.update(sql, followingId, followedId);
+        try {
+            jdbcTemplate.update(sql, followingId, followedId);
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
     }
 
 

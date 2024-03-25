@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.film.genre;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.BadRequestException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.FilmGenre;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -22,7 +23,11 @@ public class FilmGenreDaoImpl implements FilmGenreStorage {
     @Override
     public List<FilmGenre> findGenreById(int id) {
         String sql = "select * from \"film_genre\" where \"film_id\"=? and \"is_active\"";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> makeFilmGenre(rs), id);
+        try {
+            return jdbcTemplate.query(sql, (rs, rowNum) -> makeFilmGenre(rs), id);
+        } catch (Exception e) {
+            throw new BadRequestException(e);
+        }
     }
 
     @Override
@@ -30,12 +35,16 @@ public class FilmGenreDaoImpl implements FilmGenreStorage {
         String sqlGenre = "INSERT INTO \"film_genre\" " +
                 "(\"film_id\", \"genre_id\", \"is_active\")" +
                 "VALUES (?, ?, true);";
-        genres.forEach(g -> jdbcTemplate.update(
-                        sqlGenre,
-                        id,
-                        g.getId()
-                )
-        );
+        try {
+            genres.forEach(g -> jdbcTemplate.update(
+                            sqlGenre,
+                            id,
+                            g.getId()
+                    )
+            );
+        } catch (Exception e) {
+            throw new BadRequestException(e);
+        }
     }
 
     @Override
@@ -43,10 +52,14 @@ public class FilmGenreDaoImpl implements FilmGenreStorage {
         String sqlGenre = "update \"film_genre\" " +
                 "set \"is_active\" = false " +
                 "where \"film_id\" = ?";
-        film.getGenres().stream().forEach(g -> jdbcTemplate.update(
-                sqlGenre,
-                film.getId())
-        );
+        try {
+            film.getGenres().stream().forEach(g -> jdbcTemplate.update(
+                    sqlGenre,
+                    film.getId())
+            );
+        } catch (Exception e) {
+            throw new BadRequestException(e);
+        }
     }
 
     private FilmGenre makeFilmGenre(ResultSet rs) throws SQLException {
