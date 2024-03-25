@@ -31,9 +31,8 @@ public class UserService {
         return userStorage.getUser(userId);
     }
 
-    public User deleteFriends(int userId, int friendId) {
+    public void deleteFriends(int userId, int friendId) {
         userStorage.deleteFriend(userId, friendId);
-        return userStorage.getUser(userId);
     }
 
     public Set<User> getFriends(int userId) {

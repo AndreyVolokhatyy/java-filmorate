@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.BadRequestException;
+import ru.yandex.practicum.filmorate.exceptions.SQLRequestExceptions;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.genre.GenreDaoImpl;
 import ru.yandex.practicum.filmorate.storage.film.genre.FilmGenreDaoImpl;
@@ -53,7 +54,11 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public void deleteFilm(Film film) {
         String sql = "update \"film\" set \"is_active\" = false where \"id\" = ?";
-        jdbcTemplate.update(sql, film.getId());
+        try {
+            jdbcTemplate.update(sql, film.getId());
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
     }
 
     @Override
@@ -65,15 +70,20 @@ public class FilmDbStorage implements FilmStorage {
                 "\"duration\" = ?, " +
                 "\"rate_mpa_id\" = ? " +
                 " where \"id\" = ?;";
-        jdbcTemplate.update(
-                sqlFilm,
-                film.getName(),
-                film.getDescription(),
-                film.getReleaseDate(),
-                film.getDuration(),
-                film.getMpa().getId(),
-                film.getId()
-        );
+        try {
+            jdbcTemplate.update(
+                    sqlFilm,
+                    film.getName(),
+                    film.getDescription(),
+                    film.getReleaseDate(),
+                    film.getDuration(),
+                    film.getMpa().getId(),
+                    film.getId()
+            );
+
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
         filmGenreDao.delete(film);
         filmGenreDao.insert(film.getGenres(), film.getId());
         return film;
@@ -88,7 +98,11 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film getFilm(int id) {
         String sql = "select * from \"film\" where \"id\" = ? and \"is_active\"";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> filmResponse(rs), id);
+        try {
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> filmResponse(rs), id);
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
     }
 
     @Override
