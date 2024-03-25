@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,28 +15,25 @@ import java.util.Set;
 
 @Data
 @Slf4j
+@AllArgsConstructor
 public class User {
 
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     private int id;
-
-    @NotBlank
-    @Email
-    private String email;
-
     @NotBlank
     @NotNull
     @NotIncludeSpace
     private String login;
-
     private String name;
-
-    private Set<Integer> friends;
-
+    @NotBlank
+    @Email
+    private String email;
     @Past
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthday;
+    private Set<Friend> friends;
+    private boolean isActive;
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
