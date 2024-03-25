@@ -43,8 +43,12 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User getUser(int id) {
-        return jdbcTemplate.queryForObject("select * from \"user\" where \"id\" = ? and \"is_active\"",
-                (rs, rowNum) -> userResponse(rs), id);
+        try {
+            return jdbcTemplate.queryForObject("select * from \"user\" where \"id\" = ? and \"is_active\"",
+                    (rs, rowNum) -> userResponse(rs), id);
+        } catch (Exception e) {
+            throw new SQLRequestExceptions(e);
+        }
     }
 
     @Override
@@ -59,6 +63,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public void addFriend(int id, int otherId) {
+        getUser(id);
+        getUser(otherId);
         friendDao.addFriends(id, otherId);
     }
 

@@ -51,7 +51,6 @@ public class FriendDaoImpl implements FriendStorage {
         }
     }
 
-
     private Friend makeGenre(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         int following = rs.getInt("following_user_id");
