@@ -13,7 +13,6 @@ public class UserService {
 
     private UserStorage userStorage;
 
-    @Autowired
     public UserService(@Qualifier("dataBaseUser") UserStorage userStorage) {
         this.userStorage = userStorage;
     }

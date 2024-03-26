@@ -16,9 +16,8 @@ import java.util.List;
 @Slf4j
 public class GenreController {
 
-    private GenreService genreService;
+    private final GenreService genreService;
 
-    @Autowired
     public GenreController(GenreService genreService) {
         this.genreService = genreService;
     }

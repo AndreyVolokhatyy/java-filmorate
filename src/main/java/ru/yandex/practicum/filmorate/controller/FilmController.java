@@ -17,9 +17,8 @@ public class FilmController {
 
     private static final int DEFAULT_LIKE = 10;
 
-    private FilmService filmService;
+    private final FilmService filmService;
 
-    @Autowired
     public FilmController(FilmService filmService) {
         this.filmService = filmService;
     }

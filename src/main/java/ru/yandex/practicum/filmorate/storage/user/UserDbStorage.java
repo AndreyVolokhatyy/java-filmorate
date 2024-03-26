@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.SQLRequestExceptions;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.friend.FriendDaoImpl;
+import ru.yandex.practicum.filmorate.storage.friend.FriendStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,10 +18,10 @@ import java.util.*;
 @Data
 public class UserDbStorage implements UserStorage {
 
-    private FriendDaoImpl friendDao;
+    private FriendStorage friendDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public UserDbStorage(JdbcTemplate jdbcTemplate, @Autowired FriendDaoImpl friendDao) {
+    public UserDbStorage(JdbcTemplate jdbcTemplate, FriendDaoImpl friendDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.friendDao = friendDao;
     }

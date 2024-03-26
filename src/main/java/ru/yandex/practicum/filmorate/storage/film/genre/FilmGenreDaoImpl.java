@@ -14,6 +14,7 @@ import java.util.Set;
 
 @Component
 public class FilmGenreDaoImpl implements FilmGenreStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     public FilmGenreDaoImpl(JdbcTemplate jdbcTemplate) {

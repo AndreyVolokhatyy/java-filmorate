@@ -11,6 +11,7 @@ import java.util.List;
 
 @Component
 public class GenreDaoImpl implements GenreStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     public GenreDaoImpl(JdbcTemplate jdbcTemplate) {

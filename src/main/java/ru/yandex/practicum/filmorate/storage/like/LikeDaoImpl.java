@@ -11,6 +11,7 @@ import java.util.List;
 
 @Component
 public class LikeDaoImpl implements LikeStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     public LikeDaoImpl(JdbcTemplate jdbcTemplate) {

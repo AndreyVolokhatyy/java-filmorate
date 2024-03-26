@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.BadRequestException;
@@ -21,17 +20,21 @@ import java.util.*;
 @Data
 public class FilmDbStorage implements FilmStorage {
 
-    @Autowired
     private FilmGenreDaoImpl filmGenreDao;
-    @Autowired
     private GenreDaoImpl genreDao;
-    @Autowired
     private RateMPADaoImpl rateMPADao;
-    @Autowired
     private LikeDaoImpl likeDao;
     private final JdbcTemplate jdbcTemplate;
 
-    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
+    public FilmDbStorage(FilmGenreDaoImpl filmGenreDao,
+                         GenreDaoImpl genreDao,
+                         RateMPADaoImpl rateMPADao,
+                         LikeDaoImpl likeDao,
+                         JdbcTemplate jdbcTemplate) {
+        this.filmGenreDao = filmGenreDao;
+        this.genreDao = genreDao;
+        this.rateMPADao = rateMPADao;
+        this.likeDao = likeDao;
         this.jdbcTemplate = jdbcTemplate;
     }
 

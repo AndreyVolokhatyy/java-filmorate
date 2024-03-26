@@ -11,6 +11,7 @@ import java.util.List;
 
 @Component
 public class FriendDaoImpl implements FriendStorage {
+
     private final JdbcTemplate jdbcTemplate;
 
     public FriendDaoImpl(JdbcTemplate jdbcTemplate) {

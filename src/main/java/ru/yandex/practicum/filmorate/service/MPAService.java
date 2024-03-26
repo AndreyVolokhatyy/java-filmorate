@@ -1,17 +1,19 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.RateMPA;
-import ru.yandex.practicum.filmorate.storage.rate.RateMPADaoImpl;
+import ru.yandex.practicum.filmorate.storage.rate.RateMPAStorage;
 
 import java.util.List;
 
 @Service
 public class MPAService {
 
-    @Autowired
-    private RateMPADaoImpl rateMPADao;
+    private RateMPAStorage rateMPADao;
+
+    public MPAService(RateMPAStorage rateMPADao) {
+        this.rateMPADao = rateMPADao;
+    }
 
     public List<RateMPA> getListMPA() {
         return rateMPADao.findRates();
