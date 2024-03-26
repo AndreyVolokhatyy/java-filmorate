@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@Component("inMemory")
 @Data
 public class InMemoryFilmStorage implements FilmStorage {
 
@@ -43,6 +43,16 @@ public class InMemoryFilmStorage implements FilmStorage {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public Film addLike(Integer id, Integer userId) {
+        return null;
+    }
+
+    @Override
+    public Film deleteLike(Integer id, Integer userId) {
+        return null;
     }
 
     public Film handlerFilms(Film film) {

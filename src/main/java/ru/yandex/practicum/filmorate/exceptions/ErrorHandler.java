@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.exceptions;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,13 +13,13 @@ import java.util.Map;
 @RestControllerAdvice("ru.yandex.practicum")
 public class ErrorHandler {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, ValidationException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, ValidationException.class, BadRequestException.class, EmptyResultDataAccessException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleBarRequest() {
         return Map.of("Validation error", "Check your request.");
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, NullPointerException.class})
+    @ExceptionHandler({IllegalArgumentException.class, NullPointerException.class, SQLRequestExceptions.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFound() {
         return Map.of("Not Found", "Check your request.");
